@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.AirqualityMapper">
+  <resultMap id="BaseResultMap" type="com.qf.bean.Airquality">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="district_id" jdbcType="INTEGER" property="districtId" />
+    <result column="monitor_time" jdbcType="TIMESTAMP" property="monitorTime" />
+    <result column="pm10" jdbcType="INTEGER" property="pm10" />
+    <result column="pm25" jdbcType="INTEGER" property="pm25" />
+    <result column="monitoring" jdbcType="VARCHAR" property="monitoring" />
+    <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
+    <association property="district" javaType="com.qf.bean.District">
+      <id column="disid" property="id"></id>
+      <result column="name" property="name"></result>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, district_id, monitor_time, pm10, pm25, monitoring, last_modify_time
+  </sql>
+  <!--查询全部+分页+天剑查询-->
+  <select id="findairs" resultMap="BaseResultMap">
+    select d.id disid,d.name name,a.* from airquality a,district d where a.district_id=d.id
+    <if test="disid>0">
+      and a.district_id=#{disid}
+    </if>
+    order  by monitor_time desc
+  </select>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from airquality
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--删除-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from airquality
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!--添加-->
+  <insert id="insert" parameterType="com.qf.bean.Airquality">
+    insert into airquality (district_id, monitor_time,
+      pm10, pm25, monitoring, 
+      last_modify_time)
+    values ( #{districtId,jdbcType=INTEGER}, #{monitorTime,jdbcType=TIMESTAMP},
+      #{pm10,jdbcType=INTEGER}, #{pm25,jdbcType=INTEGER}, #{monitoring,jdbcType=VARCHAR}, 
+      #{lastModifyTime,jdbcType=TIMESTAMP})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.qf.bean.Airquality">
+    insert into airquality
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="districtId != null">
+        district_id,
+      </if>
+      <if test="monitorTime != null">
+        monitor_time,
+      </if>
+      <if test="pm10 != null">
+        pm10,
+      </if>
+      <if test="pm25 != null">
+        pm25,
+      </if>
+      <if test="monitoring != null">
+        monitoring,
+      </if>
+      <if test="lastModifyTime != null">
+        last_modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="districtId != null">
+        #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="monitorTime != null">
+        #{monitorTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pm10 != null">
+        #{pm10,jdbcType=INTEGER},
+      </if>
+      <if test="pm25 != null">
+        #{pm25,jdbcType=INTEGER},
+      </if>
+      <if test="monitoring != null">
+        #{monitoring,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null">
+        #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qf.bean.Airquality">
+    update airquality
+    <set>
+      <if test="districtId != null">
+        district_id = #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="monitorTime != null">
+        monitor_time = #{monitorTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pm10 != null">
+        pm10 = #{pm10,jdbcType=INTEGER},
+      </if>
+      <if test="pm25 != null">
+        pm25 = #{pm25,jdbcType=INTEGER},
+      </if>
+      <if test="monitoring != null">
+        monitoring = #{monitoring,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null">
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--更新-->
+  <update id="updateByPrimaryKey" parameterType="com.qf.bean.Airquality">
+    update airquality
+    set district_id = #{districtId,jdbcType=INTEGER},
+      monitor_time = #{monitorTime,jdbcType=TIMESTAMP},
+      pm10 = #{pm10,jdbcType=INTEGER},
+      pm25 = #{pm25,jdbcType=INTEGER},
+      monitoring = #{monitoring,jdbcType=VARCHAR},
+      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+
+
+
+
+</mapper>
